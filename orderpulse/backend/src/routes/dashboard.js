@@ -1,7 +1,10 @@
 const express = require('express');
 const Order = require('../models/Order');
+const rateLimit = require('../middleware/rateLimit');
 
 const router = express.Router();
+
+router.use(rateLimit({ windowMs: 60000, max: 120 }));
 
 router.get('/orders', async (req, res) => {
   try {

@@ -1,5 +1,13 @@
 const nodemailer = require('nodemailer');
 
+const escapeHtml = (value) =>
+  String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
 const badgeColor = (classification) => {
   if (classification === 'VIP') {
     return '#d97706';
@@ -32,24 +40,30 @@ const sendOrderEmail = async (order, aiResult) => {
     : '';
 
   const classification = aiResult.classification;
+  const safeSummary = escapeHtml(aiResult.summary || 'Order received.').replace(/\n/g, '<br />');
+  const safeCustomer = escapeHtml(customerName || 'Guest');
+  const safeEmail = escapeHtml(order.email || 'Unknown');
+  const safeTotal = escapeHtml(order.total_price || '0.00');
+  const safeOrderId = escapeHtml(order.id || '');
+  const safeClassification = escapeHtml(classification);
   const fraudHints = aiResult.fraud_hints?.length
-    ? `<ul>${aiResult.fraud_hints.map((hint) => `<li>${hint}</li>`).join('')}</ul>`
+    ? `<ul>${aiResult.fraud_hints.map((hint) => `<li>${escapeHtml(hint)}</li>`).join('')}</ul>`
     : '<p>None</p>';
 
   const html = `
     <div style="font-family: Arial, sans-serif; color: #111827;">
-      <h2>OrderPulse Alert: Order #${order.id}</h2>
+      <h2>OrderPulse Alert: Order #${safeOrderId}</h2>
       <p>
         <strong>Status:</strong>
         <span style="background:${badgeColor(classification)};color:#fff;padding:4px 10px;border-radius:12px;">
-          ${classification}
+          ${safeClassification}
         </span>
       </p>
-      <p><strong>Customer:</strong> ${customerName || 'Guest'}</p>
-      <p><strong>Email:</strong> ${order.email || 'Unknown'}</p>
-      <p><strong>Total:</strong> $${order.total_price || '0.00'}</p>
+      <p><strong>Customer:</strong> ${safeCustomer}</p>
+      <p><strong>Email:</strong> ${safeEmail}</p>
+      <p><strong>Total:</strong> $${safeTotal}</p>
       <h3>AI Summary</h3>
-      <p>${aiResult.summary}</p>
+      <p>${safeSummary}</p>
       <h3>Fraud Hints</h3>
       ${fraudHints}
     </div>
@@ -58,7 +72,7 @@ const sendOrderEmail = async (order, aiResult) => {
   await transporter.sendMail({
     from: EMAIL_USER,
     to: EMAIL_TO,
-    subject: `[OrderPulse] ${classification} order #${order.id}`,
+    subject: `[OrderPulse] ${safeClassification} order #${safeOrderId}`,
     html,
   });
 };
