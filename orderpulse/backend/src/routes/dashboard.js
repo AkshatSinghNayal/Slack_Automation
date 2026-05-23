@@ -3,10 +3,9 @@ const Order = require('../models/Order');
 const rateLimit = require('../middleware/rateLimit');
 
 const router = express.Router();
+const dashboardLimiter = rateLimit({ windowMs: 60000, max: 120 });
 
-router.use(rateLimit({ windowMs: 60000, max: 120 }));
-
-router.get('/orders', async (req, res) => {
+router.get('/orders', dashboardLimiter, async (req, res) => {
   try {
     const orders = await Order.find()
       .sort({ createdAt: -1 })
@@ -20,7 +19,7 @@ router.get('/orders', async (req, res) => {
   }
 });
 
-router.get('/stats', async (req, res) => {
+router.get('/stats', dashboardLimiter, async (req, res) => {
   try {
     const [total, vip, risky, newCount, revenueAgg] = await Promise.all([
       Order.countDocuments(),
@@ -54,7 +53,7 @@ router.get('/stats', async (req, res) => {
   }
 });
 
-router.get('/chart', async (req, res) => {
+router.get('/chart', dashboardLimiter, async (req, res) => {
   try {
     const endDate = new Date();
     const startDate = new Date();
