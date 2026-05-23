@@ -1,9 +1,14 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const Order = require('../models/Order');
-const rateLimit = require('../middleware/rateLimit');
 
 const router = express.Router();
-const dashboardLimiter = rateLimit({ windowMs: 60000, max: 120 });
+const dashboardLimiter = rateLimit({
+  windowMs: 60000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 router.get('/orders', dashboardLimiter, async (req, res) => {
   try {
