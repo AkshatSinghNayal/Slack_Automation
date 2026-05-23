@@ -1,0 +1,164 @@
+.app {
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #0f172a;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dashboard__header h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.dashboard__subtitle {
+  margin: 8px 0 0;
+  color: #64748b;
+}
+
+.dashboard__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.card__label {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.card__value {
+  font-size: 28px;
+  margin-top: 10px;
+  display: block;
+}
+
+.card--vip {
+  border-left: 6px solid #f59e0b;
+}
+
+.card--risky {
+  border-left: 6px solid #ef4444;
+}
+
+.card--revenue {
+  border-left: 6px solid #22c55e;
+}
+
+.card--neutral {
+  border-left: 6px solid #64748b;
+}
+
+.chart,
+.table {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.section-header p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.chart__body {
+  margin-top: 20px;
+}
+
+.table__wrapper {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+
+th {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.08em;
+}
+
+.table__summary {
+  max-width: 320px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.badge--vip {
+  background: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+}
+
+.badge--risky {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+}
+
+.badge--new {
+  background: rgba(59, 130, 246, 0.15);
+  color: #1d4ed8;
+}

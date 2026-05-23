@@ -1,0 +1,7 @@
+orderpulse/backend/node_modules
+orderpulse/backend/.env
+orderpulse/backend/.env.*
+orderpulse/frontend/node_modules
+orderpulse/frontend/dist
+orderpulse/frontend/.env
+orderpulse/frontend/.env.*
