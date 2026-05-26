@@ -20,39 +20,53 @@ const DEFAULT_RESPONSE = {
   fraud_hints: [],
 };
 
+const GEMINI_MODEL = 'gemini-2.5-flash';
+
 const analyzeOrder = async (order) => {
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-        'Content-Type': 'application/json',
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      throw new Error('Missing GEMINI_API_KEY');
+    }
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: `${SYSTEM_PROMPT}\n\nOrder:\n${JSON.stringify(order)}` }],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.2,
+          },
+        }),
       },
-      body: JSON.stringify({
-        model: 'llama3-8b-8192',
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: JSON.stringify(order) },
-        ],
-        temperature: 0.2,
-      }),
-    });
+    );
 
     if (!response.ok) {
-      throw new Error(`Groq error: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`Gemini error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
-    const content = data?.choices?.[0]?.message?.content;
+    const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!content) {
-      throw new Error('Missing Groq response content');
+      throw new Error('Missing Gemini response content');
     }
 
     const parsed = JSON.parse(content);
     return normalizeAiResult(parsed);
   } catch (error) {
-    console.error('Groq AI error', error);
+    console.error('Gemini AI error', error);
     return normalizeAiResult(DEFAULT_RESPONSE);
   }
 };

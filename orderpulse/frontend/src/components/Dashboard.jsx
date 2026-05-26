@@ -3,6 +3,7 @@ import axios from 'axios';
 import StatsCards from './StatsCards';
 import OrderChart from './OrderChart';
 import OrderTable from './OrderTable';
+import OrderSimulator from './OrderSimulator';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api/dashboard';
 
@@ -45,7 +46,8 @@ const Dashboard = () => {
           <h1>OrderPulse</h1>
           <p className="dashboard__subtitle">Shopify order automation overview</p>
         </div>
-        <div className="dashboard__meta">
+        <div className="dashboard__meta" style={{ alignItems: 'flex-end' }}>
+          <OrderSimulator onOrderCreated={loadDashboard} />
           <span>Auto-refresh: 30s</span>
           <span>{lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString()}` : 'Loading...'}</span>
         </div>
